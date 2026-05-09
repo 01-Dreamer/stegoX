@@ -1,4 +1,4 @@
-__all__ = ["BinsStego", "DiscopStego", "EditStego", "HuffmanStego", "NeuralStego"]
+__all__ = ["BinsStego", "CrossImageStego", "DiscopStego", "EditStego", "HuffmanStego", "NeuralStego"]
 
 
 def __getattr__(name):
@@ -10,6 +10,10 @@ def __getattr__(name):
         from stegox.methods.discop import DiscopStego
 
         return DiscopStego
+    if name == "CrossImageStego":
+        from stegox.image.cross import CrossImageStego
+
+        return CrossImageStego
     if name == "EditStego":
         from stegox.methods.edit import EditStego
 
