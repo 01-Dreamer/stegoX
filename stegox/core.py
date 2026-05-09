@@ -3,20 +3,6 @@ from __future__ import annotations
 import abc
 from typing import ByteString, Iterable, Optional
 
-import torch
-from transformers import (
-    AutoConfig,
-    AutoModelForCausalLM,
-    AutoModelForMaskedLM,
-    AutoTokenizer,
-)
-from transformers.models.bert import BertConfig
-from transformers.models.bloom import BloomConfig
-from transformers.models.distilbert import DistilBertConfig
-from transformers.models.gpt2 import GPT2Config
-from transformers.models.opt import OPTConfig
-from transformers.models.roberta import RobertaConfig
-
 
 HEADER_BITS = 32
 
@@ -56,6 +42,9 @@ def chunk_bits(bitstr: str, size: int) -> list[str]:
 
 
 def load_masked_lm(model_name: str, device: str = "cpu"):
+    from transformers import AutoConfig, AutoModelForMaskedLM, AutoTokenizer
+    from transformers import BertConfig, DistilBertConfig, RobertaConfig
+
     config = AutoConfig.from_pretrained(model_name)
     if not isinstance(config, (BertConfig, RobertaConfig, DistilBertConfig)):
         raise ValueError(
@@ -69,6 +58,9 @@ def load_masked_lm(model_name: str, device: str = "cpu"):
 
 
 def load_causal_lm(model_name: str, device: str = "cpu"):
+    from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
+    from transformers import BloomConfig, GPT2Config, OPTConfig
+
     config = AutoConfig.from_pretrained(model_name)
     if not isinstance(config, (GPT2Config, BloomConfig, OPTConfig)):
         raise ValueError(
@@ -111,4 +103,6 @@ def limit_past(past_key_values, max_length: Optional[int] = None):
 
 
 def tensor_from_ids(ids: Iterable[int], device: str) -> torch.Tensor:
+    import torch
+
     return torch.tensor(list(ids), dtype=torch.long, device=device)
